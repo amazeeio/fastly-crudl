@@ -9,35 +9,36 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Exception\RequestException;
 
-class FastlyAdapter {
-  private $error = [];
+class FastlyRequestAdapter {
+  private $entryPoint;
   private $options = [];
+  private $client;
+  private $token;
 
-  private $output = [];
-  /**
-   * @var null|string
-   */
-  private $fastlyKey;
+  public $output = [];
+  public $error = [];
 
   /**
-   * @param string $fastlyKey
+   * @param string $token
    * @param array  $defaultHeaders
    */
-  public function __construct ($fastlyKey = null, $defaultHeaders = []) {
-    /** @var array $defaultHeaders */
+  public function __construct ($token = null, $entrypoint, $defaultHeaders = []) {
+    $this->client = new Client();
+    $this->token = $token;
+    $this->entryPoint = $entrypoint;
+
     $this->options = array_merge(
       ['headers' => [
-        'Fastly-Key' => $fastlyKey,
+        'Fastly-Key' => $token,
         'Accept'     => 'application/json',
         'User-Agent' => 'fastly-php-v' . Fastly::VERSION
       ]],
       $defaultHeaders
     );
-    $this->fastlyKey = $fastlyKey;
   }
 
   /**
-   * Send HTTP Response.
+   * Send HTTP Request.
    *
    * @param $method
    * @param $uri
@@ -53,15 +54,14 @@ class FastlyAdapter {
       $uri = [$uri];
     }
 
-    $client = new Client();
-
     $requests = function ($urls) use ($method, $options) {
       foreach ($urls as $url) {
-        yield new Request($method, $url, array_merge_recursive($options, $this->options)['headers']);
+        yield new Request($method, $url, array_merge_recursive($options, $this->options)['headers'],
+          $method === 'POST' ? json_encode($options) : null);
       }
     };
 
-    $pool = new Pool($client, $requests($uri), [
+    $pool = new Pool($this->client, $requests($uri), [
       'concurrency' => 100,
       'fulfilled' => function (ResponseInterface $response) {
         $this->output[] = $this->getBody($response);
@@ -93,6 +93,59 @@ class FastlyAdapter {
    */
   private function getBody(ResponseInterface $response) {
     return (string)$response->getBody();
+  }
+
+  /**
+   * Build and format JSON response.
+   *
+   * @param $responses
+   * @return array|mixed
+   */
+  public function build_output($responses) {
+    $output = [];
+
+    if (!is_array($responses)) {
+      $responses = [$responses];
+    }
+
+    foreach ($responses as $response) {
+      // Convert JSON to associative php array.
+      $output += json_decode($response, true);
+    }
+
+    return $output;
+  }
+
+  /**
+   * Generate endpoint from uri.
+   *
+   * @param $uri
+   * @return array|string
+   */
+  public function build_endpoint($uri) {
+    if (is_array($uri)) {
+      foreach ($uri as $key => $value) {
+        $uri[$key] = $this->do_build_endpoint($value);
+      }
+    } else {
+      $uri = $this->do_build_endpoint($uri);
+    }
+
+    return $uri;
+  }
+
+  /**
+   * Endpoint adjustments.
+   *
+   * @param $uri
+   * @return string
+   */
+  public function do_build_endpoint($uri) {
+    if (0 !== strpos($uri, 'http')) {
+      $uri = $this->entryPoint . $uri;
+    }
+
+    return $uri;
   }
 
 }
