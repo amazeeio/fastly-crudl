@@ -15,14 +15,13 @@ class FastlyPrivateKeys extends FastlyRequestAdapter {
   /**
    * Post private key to Fastly.
    *
-   * @param $uri
    * @param $private_key
    * @param string $name
    *
    * @return array|string
    */
-  public function send_private_key($uri, $private_key, $name = '') {
-    $endpoint = $this->build_endpoint($uri);
+  public function send_private_key($private_key, $name = '') {
+    $endpoint = $this->build_endpoint('tls/private_keys');
 
     $options = [
       "data" => [
@@ -83,6 +82,4 @@ class FastlyPrivateKeys extends FastlyRequestAdapter {
   public function delete_private_key($id) {
     return $this->send('DELETE', $this->build_endpoint('tls/private_keys/') . $id);
   }
-
-
 }

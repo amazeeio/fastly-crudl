@@ -46,44 +46,6 @@ class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
     $this->signed_cert_out = $certout;
   }
 
-  public function testGetTLSKeysResponse()
-  {
-    $response = $this->fastly->send('GET', 'tls/private_keys');
-
-    $this->assertArrayHasKey('data', $response);
-  }
-
-  public function testGetSpecificTLSKeyResponse()
-  {
-    $id = '2RZmS0uEBI4mnyXI0ztqx0';
-    $response = $this->fastly->send('GET', 'tls/private_keys/'.$id);
-
-    $this->assertArrayHasKey('data', $response);
-  }
-
-  public function testGetPrivateKeys()
-  {
-    $keys = $this->fastly->private_keys;
-    $response = $keys->get_private_keys();
-
-    $this->assertArrayHasKey('data', $response);
-  }
-
-//  public function testUploadPrivateKeys()
-//  {
-//    $response = $this->fastly->send_private_key('tls/private_keys', $this->private_key);
-//
-//    $this->assertEquals('tls_private_key', $response['data']['type']);
-//    $this->assertArrayHasKey('id', $response['data']);
-//    $this->assertArrayHasKey('attributes', $response['data']);
-//  }
-
-//  public function testDeletePrivateKeys()
-//  {
-//    $id = '1LHnhX5YI6EYjtfwVFTvBT';
-//    $response = $this->fastly->send('DELETE', 'tls/private_keys/'.$id);
-//  }
-
   public function testGetCertificates()
   {
     $certificates = $this->fastly->certificates;
@@ -103,7 +65,6 @@ class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
   public function testGetCertificateByID()
   {
     $certificates = $this->fastly->certificates;
-
     $get_certificate = $certificates->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
 
     $this->assertArrayHasKey('id', $get_certificate);

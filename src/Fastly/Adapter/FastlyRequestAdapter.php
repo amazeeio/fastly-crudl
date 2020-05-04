@@ -17,6 +17,7 @@ class FastlyRequestAdapter {
 
   public $output = [];
   public $error = [];
+  public $statusCode = [];
 
   /**
    * @param string $token
@@ -64,7 +65,15 @@ class FastlyRequestAdapter {
     $pool = new Pool($this->client, $requests($uri), [
       'concurrency' => 100,
       'fulfilled' => function (ResponseInterface $response) {
-        $this->output[] = $this->getBody($response);
+        $body = $this->getBody($response);
+        $this->statusCode[] = $response->getStatusCode();
+
+        if ($body === '' || $body === null) {
+          $this->output[] = "No Content";
+        }
+        else {
+          $this->output[] = $body;
+        }
       },
       'rejected' => function (RequestException $e) {
         $this->error[] = $e->getMessage();
@@ -92,7 +101,12 @@ class FastlyRequestAdapter {
    * @return string
    */
   private function getBody(ResponseInterface $response) {
-    return (string)$response->getBody();
+    if ($response->getStatusCode() === "204") {
+      return "204 No Content";
+    }
+    else {
+      return (string)$response->getBody();
+    }
   }
 
   /**

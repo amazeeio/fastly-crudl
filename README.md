@@ -71,15 +71,26 @@ $purge = $fastly->send('POST', 'service/'. $fastly_service_id .'/purge_all');
 
 ```php
 
-$response = $fastly->send_private_key($cert_d_1);
+$private_keys = $fastly->private_keys;
+
+$get_keys = $private_keys->get_private_keys();
+
+$key = $private_keys->get_private_key($id);
+
+$new_key = $private_keys->send_private_key($key, $name = '');
 
 ```
 
 ### Certificates    
 
 ```php
+$certificates = $fastly->certificates;
 
-$response = $fastly->send_tls_certificate($cert_d_1);
+$certificates->get_tls_certificates();
+$certificates->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
+$certificates->send_tls_certificate($cert);
+$certificates->update_tls_certificate($id, $certificate);
+$certificates->delete_tls_certificate($id);
 
 ```
 
