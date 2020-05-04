@@ -6,7 +6,7 @@
 
 namespace Fastly;
 
-use Fastly\Adapter\FastlyRequestAdapter;
+use Fastly\Request\FastlyRequest;
 use Fastly\Exceptions\FastlyAPIResponseException;
 use Fastly\Types\FastlyCertificates;
 use Fastly\Types\FastlyPrivateKeys;
@@ -31,7 +31,7 @@ class Fastly {
    * @param string $entryPoint
    */
   public function __construct(string $token, $service = '', $entryPoint = 'https://api.fastly.com/') {
-    $this->adapter    = new FastlyRequestAdapter($token, $entryPoint);
+    $this->request    = new FastlyRequest($token, $entryPoint);
     $this->service    = $service;
     $this->entryPoint = $entryPoint;
 
@@ -49,44 +49,31 @@ class Fastly {
    * @return array | string Fastly's JSON output.
    */
   public function send($method, $uri, array $options = []) {
-    $endpoint = $this->adapter->build_endpoint($uri);
+    $endpoint = $this->request->build_endpoint($uri);
 
     // Reset errors
     $this->error = null;
 
     // Send HTTP request.
     try {
-      $result = $this->adapter->send($method, $endpoint, $options);
+      $result = $this->request->send($method, $endpoint, $options);
     }
     catch (RequestException $e) {
-      //@todo: Add custom exception.
-      //$response = $this->RequestErrorHandling($e);
-      return $this->error = $e;
+      $this->error = $e;
+      return $e->getMessage();
     }
 
     if (!$result) {
-      $this->error = $this->adapter->getError();
+      $this->error = $this->request->get_error();
     }
 
-    return $this->adapter->build_output($result);
-  }
-
-  /**
-   * Set the service ID.
-   *
-   * @param string $service
-   * @return Fastly
-   */
-  public function set_service(string $service): Fastly {
-    $this->service = $service;
-    return $this;
+    return $this->request->build_output($result);
   }
 
   /**
    * @return mixed
    */
-  public function get_error()
-  {
+  public function get_error() {
     return $this->error;
   }
 }

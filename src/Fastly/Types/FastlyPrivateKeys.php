@@ -2,15 +2,11 @@
 
 namespace Fastly\Types;
 
-use Fastly\Adapter\FastlyRequestAdapter;
+use Fastly\Request\FastlyRequest;
 use GuzzleHttp\Exception\RequestException;
 
-class FastlyPrivateKeys extends FastlyRequestAdapter {
+class FastlyPrivateKeys extends FastlyRequest {
   public $data;
-
-  public function __construct($token, $entrypoint) {
-    parent::__construct($token, $entrypoint);
-  }
 
   /**
    * Post private key to Fastly.
@@ -37,15 +33,16 @@ class FastlyPrivateKeys extends FastlyRequestAdapter {
       $result = $this->send('POST', $endpoint, $options);
     }
     catch (RequestException $e) {
-      return [$this->error = $e];
+      $this->error = $e;
+      return $e->getMessage();
     }
 
     if ($result) {
       return $this->build_output($result);
     }
     else {
-      if ($this->getError()) {
-        $this->error = $this->getError();
+      if ($this->get_error()) {
+        $this->error = $this->get_error();
       }
       return $this->error;
     }
@@ -65,6 +62,11 @@ class FastlyPrivateKeys extends FastlyRequestAdapter {
     }
   }
 
+  /**
+   * Get a list of private keys.
+   *
+   * @return array|mixed
+   */
   public function get_private_keys() {
     $result = $this->send('GET', $this->build_endpoint('tls/private_keys'));
 

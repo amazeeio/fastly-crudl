@@ -2,18 +2,20 @@
 
 namespace Fastly\Types;
 
-use Fastly\Adapter\FastlyRequestAdapter;
+use Fastly\Request\FastlyRequest;
 use GuzzleHttp\Exception\RequestException;
 
-class FastlyCertificates extends FastlyRequestAdapter {
+class FastlyCertificates extends FastlyRequest {
   public $data;
   public $links;
   public $meta;
 
-  public function __construct($token, $entrypoint) {
-    parent::__construct($token, $entrypoint);
-  }
-
+  /**
+   * Get certificate by id.
+   *
+   * @param string $id
+   * @return mixed
+   */
   public function get_tls_certificate($id = '') {
     $endpoint = $this->build_endpoint('tls/certificates/' . $id);
     $certificate_response = $this->send('GET', $endpoint);
@@ -27,10 +29,11 @@ class FastlyCertificates extends FastlyRequestAdapter {
   }
 
   /**
+   * Get certificates.
    *
+   * @return array|mixed
    */
   public function get_tls_certificates() {
-
     $certificates_response = $this->send('GET', $this->build_endpoint('tls/certificates'));
 
     if ($certificates_response !== null || $certificates_response != []) {
@@ -70,15 +73,65 @@ class FastlyCertificates extends FastlyRequestAdapter {
       $result = $this->send('POST', $endpoint, $options);
     }
     catch (RequestException $e) {
-      return [$this->error = $e];
+      $this->error = $e;
+      return $e->getMessage();
     }
 
     if ($result) {
       return $this->build_output($result);
     }
     else {
-      if (parent::getError()) {
-        $this->error = parent::getError();
+      if (parent::get_error()) {
+        $this->error = parent::get_error();
+      }
+      return $this->error;
+    }
+  }
+
+  /**
+   * Send bulk certificates.
+   *
+   * @param $signed_certificate
+   * @param $intermediates_cert
+   * @param $configurations_id
+   *
+   * @return array|mixed|string
+   */
+  public function send_bulk_tls_certificates($signed_certificate, $intermediates_cert, $configurations_id) {
+    $endpoint = $this->build_endpoint('tls/bulk/certificates');
+
+    $options = [
+      "data" => [
+        "type" => "tls_bulk_certificate",
+        "attributes" => [
+          "cert_blob" => $signed_certificate,
+          "intermediates_blob" => $intermediates_cert
+        ],
+        "relationships" => [
+          "tls_configurations" => [
+            "data" => [
+              "type" => "tls_configuration",
+              "id" => $configurations_id
+            ]
+          ]
+        ]
+      ]
+    ];
+
+    try {
+      $result = $this->send('POST', $endpoint, $options);
+    }
+    catch (RequestException $e) {
+      $this->error = $e;
+      return $e->getMessage();
+    }
+
+    if ($result) {
+      return $this->build_output($result);
+    }
+    else {
+      if (parent::get_error()) {
+        $this->error = parent::get_error();
       }
       return $this->error;
     }

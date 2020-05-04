@@ -1,6 +1,6 @@
 <?php
 
-namespace Fastly\Adapter;
+namespace Fastly\Request;
 
 use Fastly\Fastly as Fastly;
 use Psr\Http\Message\ResponseInterface;
@@ -9,7 +9,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Exception\RequestException;
 
-class FastlyRequestAdapter {
+class FastlyRequest {
   private $entryPoint;
   private $options = [];
   private $client;
@@ -23,7 +23,7 @@ class FastlyRequestAdapter {
    * @param string $token
    * @param array  $defaultHeaders
    */
-  public function __construct ($token = null, $entrypoint, $defaultHeaders = []) {
+  public function __construct($token = null, $entrypoint, $defaultHeaders = []) {
     $this->client = new Client();
     $this->token = $token;
     $this->entryPoint = $entrypoint;
@@ -32,7 +32,7 @@ class FastlyRequestAdapter {
       ['headers' => [
         'Fastly-Key' => $token,
         'Accept'     => 'application/json',
-        'User-Agent' => 'fastly-php-v' . Fastly::VERSION
+        'User-Agent' => 'fastly-php-wrapper-v' . Fastly::VERSION
       ]],
       $defaultHeaders
     );
@@ -65,7 +65,7 @@ class FastlyRequestAdapter {
     $pool = new Pool($this->client, $requests($uri), [
       'concurrency' => 100,
       'fulfilled' => function (ResponseInterface $response) {
-        $body = $this->getBody($response);
+        $body = $this->get_body($response);
         $this->statusCode[] = $response->getStatusCode();
 
         if ($body === '' || $body === null) {
@@ -92,7 +92,7 @@ class FastlyRequestAdapter {
   /**
    * @return string
    */
-  public function getError() {
+  public function get_error() {
     return implode("\r\n", $this->error);
   }
 
@@ -100,7 +100,7 @@ class FastlyRequestAdapter {
    * @param ResponseInterface $response
    * @return string
    */
-  private function getBody(ResponseInterface $response) {
+  private function get_body(ResponseInterface $response) {
     if ($response->getStatusCode() === "204") {
       return "204 No Content";
     }

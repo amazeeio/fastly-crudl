@@ -62,13 +62,13 @@ class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
     $this->assertNotEmpty($certificates->meta);
   }
 
-  public function testGetCertificateByID()
-  {
-    $certificates = $this->fastly->certificates;
-    $get_certificate = $certificates->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
-
-    $this->assertArrayHasKey('id', $get_certificate);
-  }
+//  public function testGetCertificateByID()
+//  {
+//    $certificates = $this->fastly->certificates;
+//    $get_certificate = $certificates->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
+//
+//    $this->assertArrayHasKey('id', $get_certificate);
+//  }
 
 //  public function testUploadCertificate()
 //  {
