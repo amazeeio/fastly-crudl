@@ -72,4 +72,9 @@ class FastlyCertificate implements FastlyCertificateInterface
     {
         return $this->data['attributes']['updated_at'];
     }
+
+    public function getTlsDomains()
+    {
+        return $this->data['relationships']['tls_domains']['data'];
+    }
 }
