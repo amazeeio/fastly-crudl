@@ -47,8 +47,11 @@ class FastlyCertificates extends FastlyRequest {
             $this->meta = $output['meta'];
 
             foreach ($this->data as $certificate) {
-                $certificates[] = new FastlyCertificate($certificate);
+                $certificates['data'][] = new FastlyCertificate($certificate);
             }
+
+            $certificates['links'][] = $this->links;
+            $certificates['meta'][] = $this->meta;
         }
         return $certificates;
     }

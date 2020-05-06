@@ -6,7 +6,7 @@ namespace Fastly\Types;
 class FastlyCertificate implements FastlyCertificateInterface
 {
 
-    protected $data;
+    public $data;
 
     public function __construct($data)
     {
@@ -17,7 +17,6 @@ class FastlyCertificate implements FastlyCertificateInterface
     {
         return $this->data->id;
     }
-
 
     public function getType()
     {

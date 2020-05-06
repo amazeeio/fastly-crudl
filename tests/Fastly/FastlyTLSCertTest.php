@@ -48,27 +48,22 @@ class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
 
   public function testGetCertificates()
   {
-    $certificates = $this->fastly->certificates;
-    $get_certificates = $certificates->get_tls_certificates();
+    $certificatesObject = $this->fastly->certificates;
+    $certificates = $certificatesObject->get_tls_certificates();
 
     // Get whole response from API.
-    $this->assertArrayHasKey('data',$get_certificates);
-
-    // Retrieve data from response
-    $this->assertNotEmpty($certificates->data);
-    // Retrieve links from response
-    $this->assertNotEmpty($certificates->links);
-    // Retrieve meta from response
-    $this->assertNotEmpty($certificates->meta);
+    $this->assertArrayHasKey('data', $certificates);
+    $this->assertArrayHasKey('links', $certificates);
+    $this->assertArrayHasKey('meta', $certificates);
   }
 
-//  public function testGetCertificateByID()
-//  {
-//    $certificates = $this->fastly->certificates;
-//    $get_certificate = $certificates->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
-//
-//    $this->assertArrayHasKey('id', $get_certificate);
-//  }
+  public function testGetCertificateByID()
+  {
+    $certificatesObject = $this->fastly->certificates;
+    $certificate = $certificatesObject->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
+
+    $this->assertArrayHasKey('id', $certificate);
+  }
 
 //  public function testUploadCertificate()
 //  {

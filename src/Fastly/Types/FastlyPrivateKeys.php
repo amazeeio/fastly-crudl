@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class FastlyPrivateKeys extends FastlyRequest {
   public $data;
+  public $meta;
 
   /**
    * Post private key to Fastly.
@@ -68,11 +69,24 @@ class FastlyPrivateKeys extends FastlyRequest {
    * @return array|mixed
    */
   public function get_private_keys() {
-    $result = $this->send('GET', $this->build_endpoint('tls/private_keys'));
+    $keys_response = $this->send('GET', $this->build_endpoint('tls/private_keys'));
 
-    if ($result) {
-      return $this->build_output($result);
+    $keys = [];
+
+    if ($keys_response !== null || $keys_response != []) {
+      $output = $this->build_output($keys_response);
+      $this->data = $output['data'];
+      $this->meta = $output['meta'];
+
+      foreach ($this->data as $private_key) {
+        $keys['data'][] = new FastlyPrivateKey($private_key);
+      }
+
+      $keys['meta'][] = $this->meta;
     }
+
+    return $keys;
+
   }
 
   /**

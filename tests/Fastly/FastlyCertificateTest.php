@@ -52,7 +52,6 @@ JSON;
             return "get" . str_replace('_', '', ucwords($element,  "_\t\r\n\f\v"));
         }, array_combine($attributeNames, $attributeNames));
 
-
         foreach ($attributeFieldNames as $attributeKey => $methodName) {
             $this->assertEquals($this->fastlyObj->attributes->$attributeKey, $this->certificateObject->$methodName());
         }
