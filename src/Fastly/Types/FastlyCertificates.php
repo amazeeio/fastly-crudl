@@ -33,21 +33,25 @@ class FastlyCertificates extends FastlyRequest {
    *
    * @return array|mixed
    */
-  public function get_tls_certificates() {
-    $certificates_response = $this->send('GET', $this->build_endpoint('tls/certificates'));
+    public function get_tls_certificates()
+    {
+        $certificates_response = $this->send('GET',
+          $this->build_endpoint('tls/certificates'));
 
-    if ($certificates_response !== null || $certificates_response != []) {
-      $output = $this->build_output($certificates_response);
-      $this->data = $output['data'];
-      $this->links = $output['links'];
-      $this->meta = $output['meta'];
+        $certificates = [];
 
-      return $output;
+        if ($certificates_response !== null || $certificates_response != []) {
+            $output = $this->build_output($certificates_response);
+            $this->data = $output['data'];
+            $this->links = $output['links'];
+            $this->meta = $output['meta'];
+
+            foreach ($this->data as $certificate) {
+                $certificates[] = new FastlyCertificate($certificate);
+            }
+        }
+        return $certificates;
     }
-    else {
-      return [];
-    }
-  }
 
   /**
    * Upload a new certificate.
