@@ -84,18 +84,14 @@ class FastlyCertificates extends FastlyRequest
         try {
             $result = $this->send('POST', $endpoint, $options);
         } catch (RequestException $e) {
-            $this->error = $e;
+            $this->error[] = $e;
             return $e->getMessage();
         }
 
         if ($result) {
-            return $this->build_output($result);
-        } else {
-            if (parent::get_error()) {
-                $this->error = parent::get_error();
-            }
-            return $this->error;
+            return new FastlyCertificate($this->build_output($result)['data']);
         }
+        return $this->get_error();
     }
 
     /**
@@ -132,18 +128,14 @@ class FastlyCertificates extends FastlyRequest
         try {
             $result = $this->send('POST', $endpoint, $options);
         } catch (RequestException $e) {
-            $this->error = $e;
+            $this->error[] = $e;
             return $e->getMessage();
         }
 
         if ($result) {
             return $this->build_output($result);
-        } else {
-            if (parent::get_error()) {
-                $this->error = parent::get_error();
-            }
-            return $this->error;
         }
+        return $this->get_error();
     }
 
     /**

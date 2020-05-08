@@ -35,18 +35,14 @@ class FastlyPrivateKeys extends FastlyRequest
         try {
             $result = $this->send('POST', $endpoint, $options);
         } catch (RequestException $e) {
-            $this->error = $e;
+            $this->error[] = $e;
             return $e->getMessage();
         }
 
         if ($result) {
             return new FastlyPrivateKey($this->build_output($result)['data']);
-        } else {
-            if ($this->get_error()) {
-                $this->error = $this->get_error();
-            }
-            return $this->error;
         }
+        return $this->get_error();
     }
 
     /**
