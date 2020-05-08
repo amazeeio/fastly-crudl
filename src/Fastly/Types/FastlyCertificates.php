@@ -5,38 +5,42 @@ namespace Fastly\Types;
 use Fastly\Request\FastlyRequest;
 use GuzzleHttp\Exception\RequestException;
 
-class FastlyCertificates extends FastlyRequest {
-  public $data;
-  public $links;
-  public $meta;
+class FastlyCertificates extends FastlyRequest
+{
+    public $data;
+    public $links;
+    public $meta;
 
-  /**
-   * Get certificate by id.
-   *
-   * @param string $id
-   * @return mixed
-   */
-  public function get_tls_certificate($id = '') {
-    $endpoint = $this->build_endpoint('tls/certificates/' . $id);
-    $certificate_response = $this->send('GET', $endpoint);
+    /**
+     * Get certificate by id.
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function get_tls_certificate($id = '')
+    {
+        $endpoint = $this->build_endpoint('tls/certificates/' . $id);
+        $certificate_response = $this->send('GET', $endpoint);
 
-    if ($certificate_response !== null || $certificate_response != []) {
-      $output = $this->build_output($certificate_response);
-      $this->data = $output['data'];
+        if ($certificate_response !== null || $certificate_response != []) {
+            $output = $this->build_output($certificate_response);
+            $this->data = $output['data'];
 
-      return $output['data'];
+            return $output['data'];
+        }
     }
-  }
 
-  /**
-   * Get certificates.
-   *
-   * @return array|mixed
-   */
+    /**
+     * Get certificates.
+     *
+     * @return array|mixed
+     */
     public function get_tls_certificates()
     {
-        $certificates_response = $this->send('GET',
-          $this->build_endpoint('tls/certificates'));
+        $certificates_response = $this->send(
+            'GET',
+            $this->build_endpoint('tls/certificates')
+        );
 
         $certificates = [];
 
@@ -56,112 +60,112 @@ class FastlyCertificates extends FastlyRequest {
         return $certificates;
     }
 
-  /**
-   * Upload a new certificate.
-   *
-   * @param $signed_certificate
-   * @param string $name
-   * @return array|mixed|string
-   */
-  public function send_tls_certificate($signed_certificate, $name = '') {
-    $endpoint = $this->build_endpoint('tls/certificates');
+    /**
+     * Upload a new certificate.
+     *
+     * @param $signed_certificate
+     * @param string $name
+     * @return array|mixed|string
+     */
+    public function send_tls_certificate($signed_certificate, $name = '')
+    {
+        $endpoint = $this->build_endpoint('tls/certificates');
 
-    $options = [
-      "data" => [
-        "type" => "tls_certificate",
-        "attributes" => [
-          "cert_blob" => $signed_certificate,
-          "name" => $name
-        ]
-      ]
-    ];
-
-    try {
-      $result = $this->send('POST', $endpoint, $options);
-    }
-    catch (RequestException $e) {
-      $this->error = $e;
-      return $e->getMessage();
-    }
-
-    if ($result) {
-      return $this->build_output($result);
-    }
-    else {
-      if (parent::get_error()) {
-        $this->error = parent::get_error();
-      }
-      return $this->error;
-    }
-  }
-
-  /**
-   * Send bulk certificates.
-   *
-   * @param $signed_certificate
-   * @param $intermediates_cert
-   * @param $configurations_id
-   *
-   * @return array|mixed|string
-   */
-  public function send_bulk_tls_certificates($signed_certificate, $intermediates_cert, $configurations_id) {
-    $endpoint = $this->build_endpoint('tls/bulk/certificates');
-
-    $options = [
-      "data" => [
-        "type" => "tls_bulk_certificate",
-        "attributes" => [
-          "cert_blob" => $signed_certificate,
-          "intermediates_blob" => $intermediates_cert
-        ],
-        "relationships" => [
-          "tls_configurations" => [
+        $options = [
             "data" => [
-              "type" => "tls_configuration",
-              "id" => $configurations_id
+                "type" => "tls_certificate",
+                "attributes" => [
+                    "cert_blob" => $signed_certificate,
+                    "name" => $name
+                ]
             ]
-          ]
-        ]
-      ]
-    ];
+        ];
 
-    try {
-      $result = $this->send('POST', $endpoint, $options);
-    }
-    catch (RequestException $e) {
-      $this->error = $e;
-      return $e->getMessage();
+        try {
+            $result = $this->send('POST', $endpoint, $options);
+        } catch (RequestException $e) {
+            $this->error = $e;
+            return $e->getMessage();
+        }
+
+        if ($result) {
+            return $this->build_output($result);
+        } else {
+            if (parent::get_error()) {
+                $this->error = parent::get_error();
+            }
+            return $this->error;
+        }
     }
 
-    if ($result) {
-      return $this->build_output($result);
-    }
-    else {
-      if (parent::get_error()) {
-        $this->error = parent::get_error();
-      }
-      return $this->error;
-    }
-  }
+    /**
+     * Send bulk certificates.
+     *
+     * @param $signed_certificate
+     * @param $intermediates_cert
+     * @param $configurations_id
+     *
+     * @return array|mixed|string
+     */
+    public function send_bulk_tls_certificates($signed_certificate, $intermediates_cert, $configurations_id)
+    {
+        $endpoint = $this->build_endpoint('tls/bulk/certificates');
 
-  /**
-   * Replace a TLS certificate with a new TLS certificate.
-   *
-   * @param $id
-   * @param $certificate
-   * @return array|mixed|string
-   */
-  public function update_tls_certificate($id, $certificate) {
-    return self::send_tls_certificate($certificate, $id);
-  }
+        $options = [
+            "data" => [
+                "type" => "tls_bulk_certificate",
+                "attributes" => [
+                    "cert_blob" => $signed_certificate,
+                    "intermediates_blob" => $intermediates_cert
+                ],
+                "relationships" => [
+                    "tls_configurations" => [
+                        "data" => [
+                            "type" => "tls_configuration",
+                            "id" => $configurations_id
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
-  /**
-   * Delete a certificate.
-   *
-   * @param $id
-   * @return array
-   */
-  public function delete_tls_certificate($id) {
-    return $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
-  }
+        try {
+            $result = $this->send('POST', $endpoint, $options);
+        } catch (RequestException $e) {
+            $this->error = $e;
+            return $e->getMessage();
+        }
+
+        if ($result) {
+            return $this->build_output($result);
+        } else {
+            if (parent::get_error()) {
+                $this->error = parent::get_error();
+            }
+            return $this->error;
+        }
+    }
+
+    /**
+     * Replace a TLS certificate with a new TLS certificate.
+     *
+     * @param $id
+     * @param $certificate
+     * @return array|mixed|string
+     */
+    public function update_tls_certificate($id, $certificate)
+    {
+        return self::send_tls_certificate($certificate, $id);
+    }
+
+    /**
+     * Delete a certificate.
+     *
+     * @param $id
+     * @return array
+     */
+    public function delete_tls_certificate($id)
+    {
+        return $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
+    }
 }

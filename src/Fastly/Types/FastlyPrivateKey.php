@@ -2,7 +2,6 @@
 
 namespace Fastly\Types;
 
-
 class FastlyPrivateKey implements FastlyPrivateKeysInterface
 {
 
@@ -15,41 +14,41 @@ class FastlyPrivateKey implements FastlyPrivateKeysInterface
 
     public function getId()
     {
-        return $this->data->id;
+        return $this->data['id'];
     }
 
     public function getType()
     {
-        return $this->data->type;
+        return $this->data['type'];
     }
 
     public function getCreatedAt()
     {
-        return $this->data->attributes->created_at;
+        return $this->data['attributes']['created_at'];
     }
 
     public function getName()
     {
-        return $this->data->attributes->name;
+        return $this->data['attributes']['name'];
     }
 
     public function getKeyLength()
     {
-        return $this->data->attributes->key_length;
+        return $this->data['attributes']['key_length'];
     }
 
     public function getKeyType()
     {
-        return $this->data->attributes->key_type;
+        return $this->data['attributes']['key_type'];
     }
 
     public function getPublicKeyDigest()
     {
-        return $this->data->attributes->public_key_sha1;
+        return $this->data['attributes']['public_key_sha1'];
     }
 
     public function getReplace()
     {
-        return $this->data->attributes->replace;
+        return $this->data['attributes']['replace'];
     }
 }
