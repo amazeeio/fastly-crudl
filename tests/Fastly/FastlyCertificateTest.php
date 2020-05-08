@@ -34,7 +34,7 @@ JSON;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->fastlyObj = json_decode($this->fastlyJson);
+        $this->fastlyObj = json_decode($this->fastlyJson, true);
         $this->certificateObject = new FastlyCertificate($this->fastlyObj);
     }
 
@@ -46,14 +46,14 @@ JSON;
 
     public function testFastlyCertificateAttributes()
     {
-        $attributeNames = array_keys((Array)$this->fastlyObj->attributes);
+        $attributeNames = array_keys((array)$this->fastlyObj['attributes']);
 
         $attributeFieldNames = array_map(function ($element) {
-            return "get" . str_replace('_', '', ucwords($element,  "_\t\r\n\f\v"));
+            return "get" . str_replace('_', '', ucwords($element, "_\t\r\n\f\v"));
         }, array_combine($attributeNames, $attributeNames));
 
         foreach ($attributeFieldNames as $attributeKey => $methodName) {
-            $this->assertEquals($this->fastlyObj->attributes->$attributeKey, $this->certificateObject->$methodName());
+            $this->assertEquals($this->fastlyObj['attributes'][$attributeKey], $this->certificateObject->$methodName());
         }
     }
 
@@ -61,5 +61,4 @@ JSON;
     {
         parent::tearDown();
     }
-
 }
