@@ -135,7 +135,7 @@ class FastlyCertificates extends FastlyRequest
         }
 
         if ($result) {
-            return $this->build_output($result);
+            return new FastlyBulkCertificate($this->build_output($result)['data']);
         }
         return $this->get_error();
     }
