@@ -5,69 +5,71 @@ namespace Fastly\Tests;
 use Dotenv\Dotenv;
 use Fastly\Fastly;
 
-class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
+class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase
+{
 
-  private $fastly;
-  private $fastly_service_id;
+    private $fastly;
+    private $fastly_service_id;
 
-  protected function setUp(): void {
-    $dotenv = Dotenv::createImmutable('./');
-    $dotenv->load();
+    protected function setUp(): void
+    {
+        $dotenv = Dotenv::createImmutable('./');
+        $dotenv->load();
 
-    $fastly_api_token = getenv('FASTLY_API_KEY');
-    $this->fastly_service_id = getenv('FASTLY_SERVICE_ID');
+        $fastly_api_token = getenv('FASTLY_API_KEY');
+        $this->fastly_service_id = getenv('FASTLY_SERVICE_ID');
 
-    $this->fastly = new Fastly($fastly_api_token, $this->fastly_service_id);
+        $this->fastly = new Fastly($fastly_api_token, $this->fastly_service_id);
 
-    $dn = array(
-      "countryName" => "GB",
-      "commonName" => "example.com",
-    );
+        $dn = array(
+            "countryName" => "GB",
+            "commonName" => "example.com",
+        );
 
-    // Generate a new private (and public) key pair
-    $privkey = openssl_pkey_new(array(
-      "private_key_bits" => 2048,
-      "private_key_type" => OPENSSL_KEYTYPE_RSA,
-    ));
+        // Generate a new private (and public) key pair
+        $privkey = openssl_pkey_new(array(
+            "private_key_bits" => 2048,
+            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+        ));
 
-    // Generate a certificate signing request
-    $csr = openssl_csr_new($dn, $privkey);
+        // Generate a certificate signing request
+        $csr = openssl_csr_new($dn, $privkey);
 
-    // Generate a self-signed cert, valid for 365 days
-    $x509 = openssl_csr_sign($csr, null, $privkey, $days=365);
+        // Generate a self-signed cert, valid for 365 days
+        $x509 = openssl_csr_sign($csr, null, $privkey, $days = 365);
 
-    // Save your private key, CSR and self-signed cert for later use
-    openssl_csr_export($csr, $csrout);
-    openssl_x509_export($x509, $certout);
-    openssl_pkey_export($privkey, $pkeyout);
+        // Save your private key, CSR and self-signed cert for later use
+        openssl_csr_export($csr, $csrout);
+        openssl_x509_export($x509, $certout);
+        openssl_pkey_export($privkey, $pkeyout);
 
-    $this->private_key = $pkeyout;
-    $this->cert_sign_request_out = $csrout;
-    $this->signed_cert_out = $certout;
-  }
+        $this->private_key = $pkeyout;
+        $this->cert_sign_request_out = $csrout;
+        $this->signed_cert_out = $certout;
+    }
 
-  public function testGetCertificates()
-  {
-    $certificatesObject = $this->fastly->certificates;
-    $certificates = $certificatesObject->get_tls_certificates();
+    public function testGetCertificates()
+    {
+        $certificatesObject = $this->fastly->certificates;
+        $certificates = $certificatesObject->get_tls_certificates();
 
-    // Get whole response from API.
-    $this->assertArrayHasKey('data', $certificates);
-    $this->assertArrayHasKey('links', $certificates);
-    $this->assertArrayHasKey('meta', $certificates);
-  }
+        // Get whole response from API.
+        $this->assertArrayHasKey('data', $certificates);
+        $this->assertArrayHasKey('links', $certificates);
+        $this->assertArrayHasKey('meta', $certificates);
+    }
 
-  public function testGetCertificateByID()
-  {
-    $certificatesObject = $this->fastly->certificates;
-    $certificate = $certificatesObject->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
+    public function testGetCertificateByID()
+    {
+        $certificatesObject = $this->fastly->certificates;
+        $certificate = $certificatesObject->get_tls_certificate("1JP0gerEJXIxImRnRLckug");
 
-    $this->assertArrayHasKey('id', $certificate);
-  }
+        $this->assertArrayHasKey('id', $certificate);
+    }
 
-//  public function testUploadCertificate()
-//  {
-//$cert = <<<EOD
+    //  public function testUploadCertificate()
+    //  {
+    //$cert = <<<EOD
 //-----BEGIN CERTIFICATE-----
 //MIIC0DCCAbgCCQDc6eXMYGSx3TANBgkqhkiG9w0BAQsFADAqMSgwJgYDVQQDDB9i
 //cmF2ZS1sYW1hcnItY2FhM2U1Lm5ldGxpZnkuYXBwMB4XDTIwMDQzMDIwMjEwN1oX
@@ -91,5 +93,4 @@ class FastlyTLSCertTest extends \PHPUnit\Framework\TestCase {
 //    $response = $this->fastly->send_tls_certificate($cert);
 //    var_dump($response);
 //  }
-
 }

@@ -2,30 +2,15 @@
 
 namespace Fastly\Types;
 
-interface FastlyCertificateInterface
+interface FastlyBulkCertificateInterface
 {
-
     public function getId();
-
     public function getType();
-
     public function getCreatedAt();
-
-    public function getIssuedTo();
-
-    public function getIssuer();
-
-    public function getName();
-
     public function getNotAfter();
-
     public function getNotBefore();
-
     public function getReplace();
-
-    public function getSerialNumber();
-
-    public function getSignatureAlgorithm();
-
     public function getUpdatedAt();
+    public function getTlsDomains();
+    public function getConfigurations();
 }
