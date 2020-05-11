@@ -6,7 +6,7 @@ interface FastlyTLSConfigurationInterface
 {
     public function getId();
 
-    public function getType);
+    public function getType();
 
     public function getDefault();
 
