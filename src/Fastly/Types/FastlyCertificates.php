@@ -117,8 +117,10 @@ class FastlyCertificates extends FastlyRequest
                 "relationships" => [
                     "tls_configurations" => [
                         "data" => [
+                            [
                             "type" => "tls_configuration",
                             "id" => $configurations_id
+                            ]
                         ]
                     ]
                 ]

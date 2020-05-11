@@ -2,7 +2,6 @@
 
 namespace Fastly\Types;
 
-
 class FastlyCertificate implements FastlyCertificateInterface
 {
 
