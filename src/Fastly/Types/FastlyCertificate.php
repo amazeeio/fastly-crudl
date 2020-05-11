@@ -6,7 +6,7 @@ namespace Fastly\Types;
 class FastlyCertificate implements FastlyCertificateInterface
 {
 
-    public $data;
+    protected $data;
 
     public function __construct($data)
     {
