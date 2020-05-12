@@ -6,6 +6,7 @@
     "api",
     "php"
   ],
+  "license": "MIT",
   "authors": [
     {
       "name": "Tim Clifford",
