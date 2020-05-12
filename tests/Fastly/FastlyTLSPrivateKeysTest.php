@@ -31,41 +31,37 @@ class FastlyTLSPrivateKeysTest extends \PHPUnit\Framework\TestCase
         $this->private_key = $pkeyout;
     }
 
-    public function testGetTLSPrivateKeys()
-    {
-        $keys = $this->fastly->private_keys;
-        $response = $keys->get_private_keys();
-
-        $this->assertArrayHasKey('data', $response);
-    }
-
-    public function testGetSpecificTLSPrivateKey()
-    {
-        $id = '2RZmS0uEBI4mnyXI0ztqx0';
-        $keys = $this->fastly->private_keys;
-
-        $get_key = $keys->get_private_key($id);
-        $this->assertArrayHasKey('data', $get_key);
-    }
-
-    // Not enabled since they created key can not be deleted. Read below.
-    // public function testUploadPrivateKeys()
-    // {
-    //     $keys = $this->fastly->private_keys;
-    //     $response = $keys->send_private_key($this->private_key, $name = '');
-
-    //     $this->assertEquals('tls_private_key', $response['data']['type']);
-    //     $this->assertArrayHasKey('id', $response['data']);
-    //     $this->assertArrayHasKey('attributes', $response['data']);
-    // }
-
-    // Deleting doesn't seem to have any effect as the key can be retrieved later.
-    //  public function testDeletePrivateKeys()
-    //  {
-    //    $id = "6bWQlIGscXMA86GChdi7q9";
+    //public function testGetTLSPrivateKeys()
+    //{
     //    $keys = $this->fastly->private_keys;
-    //    $response = $keys->delete_private_key($id);
+    //    $response = $keys->get_private_keys();
     //
-    //    $this->assertStringContainsString('No Content', $response[0]);
-    //  }
+    //    $this->assertArrayHasKey('data', $response);
+    //}
+
+    //public function testGetSpecificTLSPrivateKey()
+    //{
+    //   $id = '2RZmS0uEBI4mnyXI0ztqx0';
+    //   $keys = $this->fastly->private_keys;
+    //
+    //   $get_key = $keys->get_private_key($id);
+    //   $this->assertArrayHasKey('data', $get_key);
+    //}
+
+    //public function testUploadPrivateKeys()
+    //{
+    //   $keys = $this->fastly->private_keys;
+    //   $response = $keys->send_private_key($this->private_key, $name = '');
+    //
+    //   $this->assertEquals('tls_private_key', $response->data['type']);
+    //}
+
+    //public function testDeletePrivateKeys()
+    //{
+    //  $id = "64I6TIuQZLvp5Y74cIqVC2";
+    //  $keys = $this->fastly->private_keys;
+    //  $response = $keys->delete_private_key($id);
+    //
+    //  $this->assertStringContainsString('No Content', $response[0]);
+    //}
 }

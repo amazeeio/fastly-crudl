@@ -144,7 +144,7 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
-     * Send bulk certificates.
+     * Send bulk certificates with split public and intermediates certificates.
      *
      * @param $signed_certificate
      * @param $intermediates_cert
@@ -188,6 +188,68 @@ class FastlyCertificates extends FastlyRequest
         }
         return $this->get_error();
     }
+
+  /**
+   * Send bulk certificates.
+   *
+   * @param string $chained_certificate
+   * @param string $configurations_id
+   *
+   * @return array|mixed|string
+   */
+  public function send_bulk_chained_tls_certificates($chained_certificate, $configurations_id)
+  {
+    $endpoint = $this->build_endpoint('tls/bulk/certificates');
+
+    $certificates = $this->split_certificates($chained_certificate);
+
+    $options = [
+      "data" => [
+        "type" => "tls_bulk_certificate",
+        "attributes" => [
+          "cert_blob" => $certificates['public'],
+          "intermediates_blob" => $certificates['chained']
+        ],
+        "relationships" => [
+          "tls_configurations" => [
+            "data" => [
+              [
+                "type" => "tls_configuration",
+                "id" => $configurations_id
+              ]
+            ]
+          ]
+        ]
+      ]
+    ];
+
+    try {
+      $result = $this->send('POST', $endpoint, $options);
+    } catch (RequestException $e) {
+      $this->error[] = $e;
+      return $e->getMessage();
+    }
+
+    if ($result) {
+      return new FastlyBulkCertificate($this->build_output($result)['data']);
+    }
+    return $this->get_error();
+  }
+
+  /**
+   * @param string $chained_certificate
+   * @return array
+   */
+  private function split_certificates(string $chained_certificate)
+  {
+    list($public, $chained) = preg_split('~(?<=\-----END CERTIFICATE-----)\s~', $chained_certificate,
+      NULL,PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+    return [
+      'public' => $public,
+      'chained' => $chained
+    ];
+  }
 
     /**
      * Replace a TLS certificate with a new TLS certificate.

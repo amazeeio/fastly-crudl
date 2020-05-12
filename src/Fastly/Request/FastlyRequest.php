@@ -75,10 +75,8 @@ class FastlyRequest
                 $body = $this->get_body($response);
                 $this->statusCode[] = $response->getStatusCode();
 
-                if ($body === '' || $body === null) {
-                    $this->output[] = "No Content";
-                } else {
-                    $this->output[] = $body;
+                if (!empty($body)) {
+                  $this->output[] = $body;
                 }
             },
             'rejected' => function (RequestException $e) {
@@ -109,10 +107,10 @@ class FastlyRequest
      */
     private function get_body(ResponseInterface $response)
     {
-        if ($response->getStatusCode() === "204") {
-            return "204 No Content";
+        if ($response->getStatusCode() === 204) {
+            return $response->getReasonPhrase();
         } else {
-            return (string)$response->getBody();
+            return (string) $response->getBody();
         }
     }
 
