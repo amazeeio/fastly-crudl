@@ -211,4 +211,16 @@ class FastlyCertificates extends FastlyRequest
     {
         return $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
     }
+
+    /**
+     * Get certificate by id.
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function deleteTLSBulkCertificate($id = '')
+    {
+        $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
+        return $this->send('DELETE', $endpoint);
+    }
 }
