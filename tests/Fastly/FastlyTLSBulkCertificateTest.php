@@ -56,4 +56,16 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
     //
     //  $this->assertObjectHasAttribute('data', $response);
     //}
+
+    public function testUpdateBulkCertificates()
+    {
+      $certificatesObject = $this->fastly->certificates;
+
+      $response = $certificatesObject->updateTLSBulkCertificate(
+        "13KPV8LASGXes0c9vSjrLb",
+        $this->public_chained_cert,
+        $this->configurations_id
+      );
+    }
+
 }
