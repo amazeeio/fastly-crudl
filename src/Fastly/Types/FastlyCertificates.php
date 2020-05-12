@@ -264,6 +264,45 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
+     * Replace a TLS certificate with a new TLS certificate.
+     *
+     * @param $id
+     * @param $signed_certificate
+     * @param $intermediates_cert
+     *
+     * @return array|mixed|string
+     * @param $certificate
+     * @return array|mixed|string
+     */
+    public function updateTLSBulkCertificate($id, $signedCertificate, $intermediateCertificate)
+    {
+        $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
+
+        $options = [
+            "data" => [
+                "id" => $id,
+                "type" => "tls_bulk_certificate",
+                "attributes" => [
+                    "cert_blob" => $signedCertificate,
+                    "intermediates_blob" => $intermediateCertificate
+                ]
+            ]
+        ];
+
+        try {
+            $result = $this->send('PATCH', $endpoint, $options);
+        } catch (RequestException $e) {
+            $this->error[] = $e;
+            return $e->getMessage();
+        }
+
+        if ($result) {
+            return new FastlyBulkCertificate($this->build_output($result)['data']);
+        }
+        return $this->get_error();
+    }
+
+    /**
      * Delete a certificate.
      *
      * @param $id
@@ -272,5 +311,17 @@ class FastlyCertificates extends FastlyRequest
     public function delete_tls_certificate($id)
     {
         return $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
+    }
+
+    /**
+     * Get certificate by id.
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function deleteTLSBulkCertificate($id = '')
+    {
+        $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
+        return $this->send('DELETE', $endpoint);
     }
 }
