@@ -64,7 +64,7 @@ class FastlyRequest
                     $method,
                     $url,
                     array_merge_recursive($options, $this->options)['headers'],
-                    $method === 'POST' ? json_encode($options) : null
+                    ($method === 'POST' || $method === 'PATCH') ? json_encode($options) : null
                 );
             }
         };
@@ -76,7 +76,7 @@ class FastlyRequest
                 $this->statusCode[] = $response->getStatusCode();
 
                 if (!empty($body)) {
-                  $this->output[] = $body;
+                    $this->output[] = $body;
                 }
             },
             'rejected' => function (RequestException $e) {
