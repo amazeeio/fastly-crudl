@@ -266,7 +266,7 @@ class FastlyCertificates extends FastlyRequest
     /**
      * Replace a TLS certificate with a new TLS certificate.
      *
-     * @param $id
+     * @param $id Certificate ID
      * @param $signed_certificate
      * @param $intermediates_cert
      *
