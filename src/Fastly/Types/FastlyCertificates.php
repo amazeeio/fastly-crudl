@@ -31,6 +31,25 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
+     * Get certificate by id.
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function getTLSBulkCertificate($id = '')
+    {
+        $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
+        $certificate_response = $this->send('GET', $endpoint);
+
+        if ($certificate_response !== null && $certificate_response != []) {
+            $output = $this->build_output($certificate_response);
+            $this->data = $output['data'];
+
+            return new FastlyBulkCertificate($output['data']);
+        }
+    }
+
+    /**
      * Get certificates.
      *
      * @return array|mixed
@@ -52,6 +71,36 @@ class FastlyCertificates extends FastlyRequest
 
             foreach ($this->data as $certificate) {
                 $certificates['data'][] = new FastlyCertificate($certificate);
+            }
+
+            $certificates['links'][] = $this->links;
+            $certificates['meta'][] = $this->meta;
+        }
+        return $certificates;
+    }
+
+    /**
+     * Get bulk certificates.
+     *
+     * @return array|mixed
+     */
+    public function getTLSBulkCertificates()
+    {
+        $certificates_response = $this->send(
+            'GET',
+            $this->build_endpoint('tls/bulk/certificates')
+        );
+
+        $certificates = [];
+
+        if ($certificates_response !== null || $certificates_response != []) {
+            $output = $this->build_output($certificates_response);
+            $this->data = $output['data'];
+            $this->links = $output['links'];
+            $this->meta = $output['meta'];
+
+            foreach ($this->data as $certificate) {
+                $certificates['data'][] = new FastlyBulkCertificate($certificate);
             }
 
             $certificates['links'][] = $this->links;
@@ -84,18 +133,14 @@ class FastlyCertificates extends FastlyRequest
         try {
             $result = $this->send('POST', $endpoint, $options);
         } catch (RequestException $e) {
-            $this->error = $e;
+            $this->error[] = $e;
             return $e->getMessage();
         }
 
         if ($result) {
-            return $this->build_output($result);
-        } else {
-            if (parent::get_error()) {
-                $this->error = parent::get_error();
-            }
-            return $this->error;
+            return new FastlyCertificate($this->build_output($result)['data']);
         }
+        return $this->get_error();
     }
 
     /**
@@ -121,8 +166,10 @@ class FastlyCertificates extends FastlyRequest
                 "relationships" => [
                     "tls_configurations" => [
                         "data" => [
+                            [
                             "type" => "tls_configuration",
                             "id" => $configurations_id
+                            ]
                         ]
                     ]
                 ]
@@ -132,18 +179,14 @@ class FastlyCertificates extends FastlyRequest
         try {
             $result = $this->send('POST', $endpoint, $options);
         } catch (RequestException $e) {
-            $this->error = $e;
+            $this->error[] = $e;
             return $e->getMessage();
         }
 
         if ($result) {
-            return $this->build_output($result);
-        } else {
-            if (parent::get_error()) {
-                $this->error = parent::get_error();
-            }
-            return $this->error;
+            return new FastlyBulkCertificate($this->build_output($result)['data']);
         }
+        return $this->get_error();
     }
 
     /**

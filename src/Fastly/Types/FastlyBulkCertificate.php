@@ -2,7 +2,7 @@
 
 namespace Fastly\Types;
 
-class FastlyCertificate implements FastlyCertificateInterface
+class FastlyBulkCertificate implements FastlyBulkCertificateInterface
 {
 
     protected $data;
@@ -27,21 +27,6 @@ class FastlyCertificate implements FastlyCertificateInterface
         return $this->data['attributes']['created_at'];
     }
 
-    public function getIssuedTo()
-    {
-        return $this->data['attributes']['issued_to'];
-    }
-
-    public function getIssuer()
-    {
-        return $this->data['attributes']['issuer'];
-    }
-
-    public function getName()
-    {
-        return $this->data['attributes']['name'];
-    }
-
     public function getNotAfter()
     {
         return $this->data['attributes']['not_after'];
@@ -57,16 +42,6 @@ class FastlyCertificate implements FastlyCertificateInterface
         return $this->data['attributes']['replace'];
     }
 
-    public function getSerialNumber()
-    {
-        return $this->data['attributes']['serial_number'];
-    }
-
-    public function getSignatureAlgorithm()
-    {
-        return $this->data['attributes']['signature_algorithm'];
-    }
-
     public function getUpdatedAt()
     {
         return $this->data['attributes']['updated_at'];
@@ -75,5 +50,10 @@ class FastlyCertificate implements FastlyCertificateInterface
     public function getTlsDomains()
     {
         return $this->data['relationships']['tls_domains']['data'];
+    }
+
+    public function getConfigurations()
+    {
+        return $this->data['relationships']['tls_configurations']['data'];
     }
 }
