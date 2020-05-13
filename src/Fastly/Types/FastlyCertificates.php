@@ -88,7 +88,6 @@ class FastlyCertificates extends FastlyRequest
    */
     public function getTLSBulkCertificates($domain = '')
     {
-
         if (!isEmpty($domain)) {
           $certificates_response = $this->send(
             'GET',
@@ -335,5 +334,30 @@ class FastlyCertificates extends FastlyRequest
     {
         $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
         return $this->send('DELETE', $endpoint);
+    }
+
+  /**
+   * Get Service by given domain name.
+   *
+   * @param string $domain
+   * @return array|mixed|string
+   */
+    public function getServiceByDomain($domain = '')
+    {
+      if ($domain === '' || $domain === null) {
+        return $this->data = 'Domain name must be given';
+      }
+
+      $response = $this->send(
+        'GET',
+        $this->build_endpoint('services?filter[domains.name][match]=' . $domain . '&filter[domains.deleted]=false')
+      );
+
+      $output = $this->build_output($response);
+      $this->data = $output['data'];
+      $this->links = $output['links'];
+      $this->meta = $output['meta'];
+
+      return new FastlyService($output['data']);
     }
 }

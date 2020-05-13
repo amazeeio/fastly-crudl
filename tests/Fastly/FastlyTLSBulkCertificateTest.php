@@ -21,9 +21,9 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
 
         $this->fastly = new Fastly($fastly_api_token, $this->fastly_service_id);
 
-        $this->private_key = file_get_contents('tests/Fastly/Fixtures/key.pem');
-        $this->public_chained_cert = file_get_contents('tests/Fastly/Fixtures/public_and_chained_certificate.pem');
-        $this->configurations_id = getenv('FASTLY_CONFIG_ID');
+        //$this->private_key = file_get_contents('tests/Fastly/Fixtures/key.pem');
+        //$this->public_chained_cert = file_get_contents('tests/Fastly/Fixtures/public_and_chained_certificate.pem');
+        //$this->configurations_id = getenv('FASTLY_CONFIG_ID');
     }
 
     //public function testGetCertificates()
@@ -57,15 +57,23 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
     //  $this->assertObjectHasAttribute('data', $response);
     //}
 
-    public function testUpdateBulkCertificates()
+    //public function testUpdateBulkCertificates()
+    //{
+    //  $certificatesObject = $this->fastly->certificates;
+    //
+    //  $response = $certificatesObject->updateTLSBulkCertificate(
+    //    "13KPV8LASGXes0c9vSjrLb",
+    //    $this->public_chained_cert,
+    //    $this->configurations_id
+    //  );
+    //}
+
+    public function testGetServiceByDomain()
     {
       $certificatesObject = $this->fastly->certificates;
 
-      $response = $certificatesObject->updateTLSBulkCertificate(
-        "13KPV8LASGXes0c9vSjrLb",
-        $this->public_chained_cert,
-        $this->configurations_id
-      );
-    }
+      $response = $certificatesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
 
+      var_dump($response);
+    }
 }
