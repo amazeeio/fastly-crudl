@@ -1,5 +1,5 @@
 {
-  "name": "timclilfford/fastly_crudl",
+  "name": "timclifford/fastly_crudl",
   "description": "A PHP wrapper for using Fastly API",
   "keywords": [
     "fastly",
