@@ -26,16 +26,17 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
         //$this->configurations_id = getenv('FASTLY_CONFIG_ID');
     }
 
-    //public function testGetCertificates()
-    //{
-    //    $certificatesObject = $this->fastly->certificates;
-    //    $certificates = $certificatesObject->get_tls_certificates();
-    //
-    //    // Get whole response from API.
-    //    $this->assertArrayHasKey('data', $certificates);
-    //    $this->assertArrayHasKey('links', $certificates);
-    //    $this->assertArrayHasKey('meta', $certificates);
-    //}
+    public function testGetCertificates()
+    {
+        $certificatesObject = $this->fastly->certificates;
+        $certificates = $certificatesObject->getTLSBulkCertificates();
+
+        // Get whole response from API.
+        $this->assertArrayHasKey('data', $certificates);
+        $this->assertArrayHasKey('links', $certificates);
+        $this->assertArrayHasKey('meta', $certificates);
+        $this->assertArrayHasKey('service', $certificates);
+    }
 
     //public function testGetCertificateByID()
     //{
@@ -68,12 +69,9 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
     //  );
     //}
 
-    public function testGetServiceByDomain()
-    {
-      $certificatesObject = $this->fastly->certificates;
-
-      $response = $certificatesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
-
-      var_dump($response);
-    }
+    //public function testGetServiceByDomain()
+    //{
+    //  $certificatesObject = $this->fastly->certificates;
+    //  $response = $certificatesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
+    //}
 }

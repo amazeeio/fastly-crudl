@@ -6,10 +6,12 @@ class FastlyCertificate implements FastlyCertificateInterface
 {
 
     protected $data;
+    protected $service;
 
-    public function __construct($data)
+    public function __construct($data, $service = '')
     {
         $this->data = $data;
+        $this->service = $service;
     }
 
     public function getId()
@@ -75,5 +77,10 @@ class FastlyCertificate implements FastlyCertificateInterface
     public function getTlsDomains()
     {
         return $this->data['relationships']['tls_domains']['data'];
+    }
+
+    public function getService()
+    {
+      return $this->service;
     }
 }

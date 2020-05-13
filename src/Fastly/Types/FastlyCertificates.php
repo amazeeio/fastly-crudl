@@ -51,44 +51,14 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
-     * Get certificates.
+     * Get bulk certificates. If domain is given then we will filter by that domain.
      *
+     * @param string $domain
      * @return array|mixed
      */
-    public function get_tls_certificates()
-    {
-        $certificates_response = $this->send(
-            'GET',
-            $this->build_endpoint('tls/certificates')
-        );
-
-        $certificates = [];
-
-        if ($certificates_response !== null || $certificates_response != []) {
-            $output = $this->build_output($certificates_response);
-            $this->data = $output['data'];
-            $this->links = $output['links'];
-            $this->meta = $output['meta'];
-
-            foreach ($this->data as $certificate) {
-                $certificates['data'][] = new FastlyCertificate($certificate);
-            }
-
-            $certificates['links'][] = $this->links;
-            $certificates['meta'][] = $this->meta;
-        }
-        return $certificates;
-    }
-
-  /**
-   * Get bulk certificates. If domain is given then we will filter by that domain.
-   *
-   * @param string $domain
-   * @return array|mixed
-   */
     public function getTLSBulkCertificates($domain = '')
     {
-        if (!isEmpty($domain)) {
+        if ($domain === '' || $domain === null) {
           $certificates_response = $this->send(
             'GET',
             $this->build_endpoint('tls/bulk/certificates')
@@ -116,7 +86,18 @@ class FastlyCertificates extends FastlyRequest
 
             $certificates['links'][] = $this->links;
             $certificates['meta'][] = $this->meta;
+
+            foreach ($certificates['data'] as $certificate) {
+              $tls_domains = $certificate->getTlsDomains();
+
+              if ($tls_domains !== null || $tls_domains !== '') {
+                $service = $this->getServiceByDomain($tls_domains[0]['id']);
+                $certificates['service'] = new FastlyService($service);
+              }
+            }
+
         }
+
         return $certificates;
     }
 

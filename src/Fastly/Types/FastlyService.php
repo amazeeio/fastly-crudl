@@ -10,6 +10,8 @@ class FastlyService implements FastlyServiceInterface
     public function __construct($data)
     {
         $this->data = $data;
+
+        var_dump($data);
     }
 
     public function getId()
