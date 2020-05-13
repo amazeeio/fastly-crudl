@@ -23,8 +23,7 @@ class FastlyServices extends FastlyRequest
     {
       if ($domain === '' || $domain === null) {
         return $this->data = 'Domain name must be given';
-      }
-      else {
+      } else {
         $this->domain = $domain;
       }
 
@@ -38,7 +37,12 @@ class FastlyServices extends FastlyRequest
       $this->links = $output['links'];
       $this->meta = $output['meta'];
 
-      return new FastlyService($output['data'][0]);
+      if ($output['data'] !== '' || $output['data'] !== null) {
+        return new FastlyService($output['data'][0]);
+      }
+      else {
+        return "No service found.";
+      }
     }
 
     public function checkDomainStatusForServiceVersion($service_id, $version, $name = '')
