@@ -10,6 +10,8 @@ class FastlyServices extends FastlyRequest
     public $data;
     public $links;
     public $meta;
+    protected $domain;
+    protected $status;
 
     /**
      * Get Service by given domain name.
@@ -21,6 +23,9 @@ class FastlyServices extends FastlyRequest
     {
       if ($domain === '' || $domain === null) {
         return $this->data = 'Domain name must be given';
+      }
+      else {
+        $this->domain = $domain;
       }
 
       $response = $this->send(
@@ -34,5 +39,19 @@ class FastlyServices extends FastlyRequest
       $this->meta = $output['meta'];
 
       return new FastlyService($output['data']);
+    }
+
+    public function checkDomainStatusForServiceVersion($service_id, $version, $name = '')
+    {
+      $domain = $name ? $name : $this->domain;
+
+      $response = $this->send(
+        'GET',
+        $this->build_endpoint('service/' . $service_id . '/version/' . $version . '/domain/' . $domain . '/check')
+      );
+
+      $this->status = $this->build_output($response);
+
+      return $this->status;
     }
 }
