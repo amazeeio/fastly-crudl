@@ -41,6 +41,4 @@ class FastlyServicesTest extends \PHPUnit\Framework\TestCase
     //    "nginx.develop.uu-myaccount-portal.quu-test.amazee.io"
     //  );
     //}
-
-
 }
