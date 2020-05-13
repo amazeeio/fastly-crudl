@@ -56,4 +56,14 @@ class FastlyBulkCertificate implements FastlyBulkCertificateInterface
     {
         return $this->data['relationships']['tls_configurations']['data'];
     }
+
+    public function getService()
+    {
+        return $this->data['service'];
+    }
+
+    public function setService($service)
+    {
+      return $this->data['service'] = $service;
+    }
 }

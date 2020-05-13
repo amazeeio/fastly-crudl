@@ -81,21 +81,11 @@ class FastlyCertificates extends FastlyRequest
             $this->meta = $output['meta'];
 
             foreach ($this->data as $certificate) {
-                $certificates['data'][] = new FastlyBulkCertificate($certificate);
+              $certificates['data'][] = new FastlyBulkCertificate($certificate);
             }
 
             $certificates['links'][] = $this->links;
             $certificates['meta'][] = $this->meta;
-
-            foreach ($certificates['data'] as $certificate) {
-              $tls_domains = $certificate->getTlsDomains();
-
-              if ($tls_domains !== null || $tls_domains !== '') {
-                $service = $this->getServiceByDomain($tls_domains[0]['id']);
-                $certificates['service'] = new FastlyService($service);
-              }
-            }
-
         }
 
         return $certificates;

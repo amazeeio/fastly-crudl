@@ -35,7 +35,6 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('data', $certificates);
         $this->assertArrayHasKey('links', $certificates);
         $this->assertArrayHasKey('meta', $certificates);
-        $this->assertArrayHasKey('service', $certificates);
     }
 
     //public function testGetCertificateByID()

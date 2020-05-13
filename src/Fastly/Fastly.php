@@ -11,6 +11,7 @@ use Fastly\Exceptions\FastlyAPIResponseException;
 use Fastly\Request\FastlyRequest;
 use Fastly\Types\FastlyCertificates;
 use Fastly\Types\FastlyPrivateKeys;
+use Fastly\Types\FastlyServices;
 use Fastly\Types\FastlyTLSConfigurations;
 use GuzzleHttp\Exception\RequestException;
 
@@ -41,6 +42,7 @@ class Fastly
         $this->entryPoint = $entryPoint;
 
         $this->certificates = new FastlyCertificates($token, $entryPoint);
+        $this->services = new FastlyServices($token, $entryPoint);
         $this->configurations = new FastlyTLSConfigurations($token, $entryPoint);
         $this->private_keys = new FastlyPrivateKeys($token, $entryPoint);
     }
