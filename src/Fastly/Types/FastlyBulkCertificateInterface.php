@@ -14,4 +14,5 @@ interface FastlyBulkCertificateInterface
     public function getTlsDomains();
     public function getConfigurations();
     public function getService();
+    public function getStatus();
 }

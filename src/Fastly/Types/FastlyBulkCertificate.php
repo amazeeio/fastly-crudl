@@ -66,4 +66,14 @@ class FastlyBulkCertificate implements FastlyBulkCertificateInterface
     {
       return $this->data['service'] = $service;
     }
+
+    public function getStatus()
+    {
+      return $this->data['service'];
+    }
+
+    public function setStatus($status)
+    {
+      return $this->data['status'] = $status;
+    }
 }
