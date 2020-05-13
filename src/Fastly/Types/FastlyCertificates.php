@@ -4,6 +4,7 @@ namespace Fastly\Types;
 
 use Fastly\Request\FastlyRequest;
 use GuzzleHttp\Exception\RequestException;
+use function PHPUnit\Framework\isEmpty;
 
 class FastlyCertificates extends FastlyRequest
 {
@@ -79,17 +80,28 @@ class FastlyCertificates extends FastlyRequest
         return $certificates;
     }
 
-    /**
-     * Get bulk certificates.
-     *
-     * @return array|mixed
-     */
-    public function getTLSBulkCertificates()
+  /**
+   * Get bulk certificates. If domain is given then we will filter by that domain.
+   *
+   * @param string $domain
+   * @return array|mixed
+   */
+    public function getTLSBulkCertificates($domain = '')
     {
-        $certificates_response = $this->send(
+
+        if (!isEmpty($domain)) {
+          $certificates_response = $this->send(
             'GET',
             $this->build_endpoint('tls/bulk/certificates')
-        );
+          );
+        }
+        else {
+          // If domain is given we can filter by it.
+          $certificates_response = $this->send(
+            'GET',
+            $this->build_endpoint('tls/bulk/certificates?filter[tls_domains.id][match]=' . $domain)
+          );
+        }
 
         $certificates = [];
 
