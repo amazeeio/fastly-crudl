@@ -22,15 +22,14 @@ class FastlyServicesTest extends \PHPUnit\Framework\TestCase
         $this->fastly = new Fastly($fastly_api_token, $this->fastly_service_id);
     }
 
-    //public function testGetServiceByDomain()
-    //{
-    //    $servicesObject = $this->fastly->services;
-    //
-    //    $service = $servicesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
-    //
-    //    // Get whole response from API.
-    //    $this->assertObjectHasAttribute('data', $service);
-    //}
+    public function testGetServiceByDomain()
+    {
+        $servicesObject = $this->fastly->services;
+
+        $service = $servicesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
+
+        $this->assertObjectHasAttribute('data', $service);
+    }
 
     //public function testCheckDomainStatusForServiceVersion()
     //{

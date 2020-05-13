@@ -329,6 +329,6 @@ class FastlyCertificates extends FastlyRequest
       $this->links = $output['links'];
       $this->meta = $output['meta'];
 
-      return new FastlyService($output['data']);
+      return new FastlyService($output['data'][0]);
     }
 }
