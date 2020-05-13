@@ -38,7 +38,7 @@ class FastlyServices extends FastlyRequest
       $this->meta = $output['meta'];
 
       if ($output['data'] !== '' || $output['data'] !== null) {
-        return new FastlyService($output['data'][0]);
+        return new FastlyService($output['data']);
       }
       else {
         return "No service found.";
