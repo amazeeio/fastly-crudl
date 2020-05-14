@@ -4,6 +4,7 @@ namespace Fastly\Tests;
 
 use Dotenv\Dotenv;
 use Fastly\Fastly;
+use Fastly\Types\FastlyService;
 
 class FastlyServicesTest extends \PHPUnit\Framework\TestCase
 {
@@ -22,14 +23,24 @@ class FastlyServicesTest extends \PHPUnit\Framework\TestCase
         $this->fastly = new Fastly($fastly_api_token, $this->fastly_service_id);
     }
 
-    public function testGetServiceByDomain()
-    {
-        $servicesObject = $this->fastly->services;
-
-        $service = $servicesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
-
-        $this->assertObjectHasAttribute('data', $service);
-    }
+    //public function testGetServiceByDomain()
+    //{
+    //    $servicesObject = $this->fastly->services;
+    //    $certificates = $this->fastly->certificates->getTLSBulkCertificates();
+    //
+    //    foreach ($certificates['data'] as $key => $certificate) {
+    //      $domains = $certificate->getTLSDomains();
+    //
+    //      foreach ($domains as $domain) {
+    //        $service = $servicesObject->getServiceByDomain($domain['id']);
+    //        if ($service instanceof FastlyService) {
+    //          var_dump($service->getId());
+    //          var_dump($service->getActiveVersion());
+    //          var_dump($domain['id']);
+    //        }
+    //      }
+    //    }
+    //}
 
     //public function testCheckDomainStatusForServiceVersion()
     //{

@@ -33,15 +33,13 @@ class FastlyServices extends FastlyRequest
       );
 
       $output = $this->build_output($response);
-      $this->data = $output['data'];
-      $this->links = $output['links'];
-      $this->meta = $output['meta'];
 
-      if ($output['data'] !== '' || $output['data'] !== null) {
-        return new FastlyService($output['data']);
+      if ($output['data'] === [] || $output['data'] === null) {
+        return "No service found.";
       }
       else {
-        return "No service found.";
+        $this->data = $output['data'];
+        return new FastlyService($output['data']);
       }
     }
 

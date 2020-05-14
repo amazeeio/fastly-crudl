@@ -9,7 +9,7 @@ class FastlyService implements FastlyServiceInterface
 
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = $data[0];
     }
 
     public function getId()
