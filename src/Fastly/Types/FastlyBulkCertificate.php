@@ -59,7 +59,7 @@ class FastlyBulkCertificate implements FastlyBulkCertificateInterface
 
     public function getService()
     {
-        return $this->data['service'] ? $this->data['service'] : null;
+        return $this->data !== null ? $this->data['service'] : null;
     }
 
     public function setService($service)
@@ -69,7 +69,7 @@ class FastlyBulkCertificate implements FastlyBulkCertificateInterface
 
     public function getStatus()
     {
-      return $this->data['service'] ? $this->data['service'] : null;
+      return $this->data !== null ? $this->data['status'] : null;
     }
 
     public function setStatus($status)
