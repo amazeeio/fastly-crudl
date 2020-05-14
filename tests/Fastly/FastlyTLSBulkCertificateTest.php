@@ -4,6 +4,7 @@ namespace Fastly\Tests;
 
 use Dotenv\Dotenv;
 use Fastly\Fastly;
+use Fastly\Types\FastlyService;
 
 class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
 {
@@ -70,7 +71,37 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
 
     //public function testGetServiceByDomain()
     //{
-    //  $certificatesObject = $this->fastly->certificates;
-    //  $response = $certificatesObject->getServiceByDomain("nginx.develop.uu-myaccount-portal.quu-test.amazee.io");
+    //  $certificates = $this->fastly
+    //    ->certificates
+    //    ->getTLSBulkCertificates();
+    //
+    //  foreach ($certificates['data'] as $key => $certificate) {
+    //    $domains = $certificate->getTLSDomains();
+    //
+    //    $service = $this->fastly
+    //      ->services
+    //      ->getServiceByDomain($domains[0]['id']);
+    //
+    //    if ($service instanceof FastlyService) {
+    //      $certificate->setService($service);
+    //
+    //      $status = $this->fastly
+    //        ->services
+    //        ->checkDomainStatusForServiceVersion(
+    //          $service->getId(),
+    //          $service->getActiveVersion(),
+    //          $domains[0]['id']
+    //        );
+    //
+    //      $certificate->setStatus($status);
+    //    }
+    //  }
+    //
+    //  $cs = [];
+    //  foreach ($certificates['data'] as $c) {
+    //     if (null !== $c->getService()) {
+    //       $cs[] = $c->getService()->getId();
+    //     }
+    //  }
     //}
 }
