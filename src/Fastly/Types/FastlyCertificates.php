@@ -51,24 +51,23 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
-     * Get bulk certificates. If domain is given then we will filter by that domain.
+     * Get bulk certificates.
      *
-     * @param string $domain
+     * @param string $options
      * @return array|mixed
      */
-    public function getTLSBulkCertificates($domain = '')
+    public function getTLSBulkCertificates($options = '')
     {
-        if ($domain === '' || $domain === null) {
+        if ($options === '' || $options === null) {
           $certificates_response = $this->send(
             'GET',
             $this->build_endpoint('tls/bulk/certificates')
           );
         }
         else {
-          // If domain is given we can filter by it.
           $certificates_response = $this->send(
             'GET',
-            $this->build_endpoint('tls/bulk/certificates?filter[tls_domains.id][match]=' . $domain)
+            $this->build_endpoint('tls/bulk/certificates?'.$options)
           );
         }
 
