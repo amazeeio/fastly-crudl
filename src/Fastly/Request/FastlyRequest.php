@@ -33,7 +33,7 @@ class FastlyRequest
         $this->options = array_merge(
             ['headers' => [
                 'Fastly-Key' => $token,
-                'Accept'     => 'application/json',
+                'Accept'     => 'application/vnd.api+json',
                 'User-Agent' => 'fastly-php-wrapper-v' . Fastly::VERSION
             ]],
             $defaultHeaders
