@@ -46,16 +46,30 @@ class FastlyRequest
      * @param $method
      * @param $uri
      * @param array $options
+     * @param array $headers
      *
-     * @return array Response
+     * @return array|\Psr\Http\Message\StreamInterface|string
      */
-    public function send($method, $uri, array $options = [])
+    public function send($method, $uri, array $options = [],  array $headers = [])
     {
         $this->error = [];
         $this->output = [];
 
         if (!is_array($uri)) {
             $uri = [$uri];
+        }
+
+        if ($headers !== []) {
+            $endpoint = $this->build_endpoint($uri[0]);
+
+            try {
+                $response = $this->client->request('POST', $endpoint, $headers);
+                return $this->output[] = $response->getBody();
+            }
+            catch (RequestException $exception) {
+                $this->statusCode[] = $exception->getCode();
+                return $this->error[] = $exception->getMessage();
+            }
         }
 
         $requests = function ($urls) use ($method, $options) {
