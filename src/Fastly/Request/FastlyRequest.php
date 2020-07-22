@@ -63,12 +63,17 @@ class FastlyRequest
             $endpoint = $this->build_endpoint($uri[0]);
 
             try {
-                $response = $this->client->request('POST', $endpoint, $headers);
-                return $this->output[] = $response->getBody();
+              $response = $this->client->request('POST', $endpoint, $headers);
+              $payload['status'] = json_decode($response->getStatusCode());
+              $payload['body'] = json_decode($response->getBody());
+
+              return $this->output[] = $payload;
             }
             catch (RequestException $exception) {
-                $this->statusCode[] = $exception->getCode();
-                return $this->error[] = $exception->getMessage();
+              $this->statusCode[] = $exception->getCode();
+              $this->error[] = $exception->getMessage();
+
+              return $this->output[] = ['status' => $exception->getCode(), 'body' => $exception->getMessage()];
             }
         }
 
