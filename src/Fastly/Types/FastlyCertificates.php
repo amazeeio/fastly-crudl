@@ -287,11 +287,21 @@ class FastlyCertificates extends FastlyRequest
      * Delete a certificate.
      *
      * @param $id
-     * @return array
+     * @return mixed
      */
     public function delete_tls_certificate($id)
     {
-        return $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
+        try {
+          $response = $this->send('DELETE', $this->build_endpoint('tls/certificates/') . $id);
+        } catch (RequestException $e) {
+          $this->error[] = $e;
+          return $e->getMessage();
+        }
+
+        if ($response) {
+          return $response;
+        }
+        return $this->get_error();
     }
 
     /**
@@ -303,6 +313,17 @@ class FastlyCertificates extends FastlyRequest
     public function deleteTLSBulkCertificate($id = '')
     {
         $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
-        return $this->send('DELETE', $endpoint);
+
+        try {
+          $response = $this->send('DELETE', $endpoint);
+        } catch (RequestException $e) {
+          $this->error[] = $e;
+          return $e->getMessage();
+        }
+
+        if ($response) {
+          return $response;
+        }
+        return $this->get_error();
     }
 }
