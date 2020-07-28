@@ -31,13 +31,21 @@ class FastlyTLSPrivateKeysTest extends \PHPUnit\Framework\TestCase
         $this->private_key = $pkeyout;
     }
 
-    //public function testGetTLSPrivateKeys()
-    //{
+    // public function testGetTLSPrivateKeys()
+    // {
     //    $keys = $this->fastly->private_keys;
     //    $response = $keys->get_private_keys();
+    //    $this->assertArrayHasKey('data', $response);
+    // }
+
+    // public function testGetTLSPrivateKeysWithFilter()
+    // {
+    //    $keys = $this->fastly->private_keys;
+    //    $filter = ["filter[in_use]" => "false"];
+    //    $response = $keys->get_private_keys($filter);
     //
     //    $this->assertArrayHasKey('data', $response);
-    //}
+    // }
 
     //public function testGetSpecificTLSPrivateKey()
     //{

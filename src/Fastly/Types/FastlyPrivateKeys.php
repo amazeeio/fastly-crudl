@@ -16,7 +16,7 @@ class FastlyPrivateKeys extends FastlyRequest
      * @param $private_key
      * @param string $name
      *
-     * @return array|string
+     * @return FastlyPrivateKey|string
      */
     public function send_private_key($private_key, $name = '')
     {
@@ -49,7 +49,7 @@ class FastlyPrivateKeys extends FastlyRequest
      * Get a TLS private key.
      *
      * @param $id
-     * @return array
+     * @return FastlyPrivateKey|string
      */
     public function get_private_key($id)
     {
@@ -58,16 +58,21 @@ class FastlyPrivateKeys extends FastlyRequest
         if ($result) {
             return new FastlyPrivateKey($this->build_output($result)['data']);
         }
+
+        return $this->get_error();
     }
 
     /**
      * Get a list of private keys.
      *
+     * @param array $filter
      * @return array|mixed
      */
-    public function get_private_keys()
+    public function get_private_keys($filter = [])
     {
-        $keys_response = $this->send('GET', $this->build_endpoint('tls/private_keys'));
+        $filter_encoded_query = http_build_query($filter);
+        $endpoint = !empty($filter) ? 'tls/private_keys?'.$filter_encoded_query  : 'tls/private_keys';
+        $keys_response = $this->send('GET', $this->build_endpoint($endpoint));
 
         $keys = [];
 
