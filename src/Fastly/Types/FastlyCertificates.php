@@ -32,6 +32,34 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
+     * Get Fastly TLS certificates.
+     *
+     * @param array $filter
+     * @return array|mixed
+     */
+    public function get_tls_certificates($filter = [])
+    {
+      $filter_encoded_query = http_build_query($filter);
+      $endpoint = !empty($filter) ? 'tls/certificates?'.$filter_encoded_query  : 'tls/certificates';
+      $certificates_response = $this->send('GET', $this->build_endpoint($endpoint));
+
+      $certificates = [];
+      if ($certificates_response !== null || $certificates_response != []) {
+        $output = $this->build_output($certificates_response);
+        $this->data = $output['data'];
+        $this->meta = $output['meta'];
+
+        foreach ($this->data as $certificate) {
+          $certificates['data'][] = new FastlyCertificate($certificate);
+        }
+
+        $certificates['meta'][] = $this->meta;
+      }
+
+      return $certificates;
+    }
+
+    /**
      * Get certificate by id.
      *
      * @param string $id
@@ -51,7 +79,7 @@ class FastlyCertificates extends FastlyRequest
     }
 
     /**
-     * Get bulk certificates.
+     * Get Platform TLS bulk certificates.
      *
      * @param string $options
      * @return array|mixed

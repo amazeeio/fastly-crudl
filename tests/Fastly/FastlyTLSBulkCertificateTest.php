@@ -27,7 +27,17 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
         //$this->configurations_id = getenv('FASTLY_CONFIG_ID');
     }
 
-    public function testGetCertificates()
+    public function testGetFastlyCertificates()
+    {
+      $certificatesObject = $this->fastly->certificates;
+      $certificates = $certificatesObject->get_tls_certificates();
+
+      // Get whole response from API.
+      $this->assertArrayHasKey('data', $certificates);
+      $this->assertArrayHasKey('meta', $certificates);
+    }
+
+    public function testGetPlatformTLSCertificates()
     {
         $certificatesObject = $this->fastly->certificates;
         $certificates = $certificatesObject->getTLSBulkCertificates();
