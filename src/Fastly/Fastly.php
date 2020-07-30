@@ -13,6 +13,7 @@ use Fastly\Types\FastlyCertificates;
 use Fastly\Types\FastlyDomains;
 use Fastly\Types\FastlyPrivateKeys;
 use Fastly\Types\FastlyServices;
+use Fastly\Types\FastlyStats;
 use Fastly\Types\FastlyTLSConfigurations;
 use GuzzleHttp\Exception\RequestException;
 
@@ -31,6 +32,7 @@ class Fastly
     public $domains;
     public $configurations;
     public $private_keys;
+    public $stats;
 
     /**
      * Fastly API Client.
@@ -50,6 +52,7 @@ class Fastly
         $this->domains = new FastlyDomains($token, $entryPoint);
         $this->configurations = new FastlyTLSConfigurations($token, $entryPoint);
         $this->private_keys = new FastlyPrivateKeys($token, $entryPoint);
+        $this->stats = new FastlyStats($token, $entryPoint);
     }
 
     /**

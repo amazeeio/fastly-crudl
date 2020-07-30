@@ -56,13 +56,13 @@ class FastlyTLSPrivateKeysTest extends \PHPUnit\Framework\TestCase
     //   $this->assertArrayHasKey('data', $get_key);
     //}
 
-    //public function testUploadPrivateKeys()
-    //{
-    //   $keys = $this->fastly->private_keys;
-    //   $response = $keys->send_private_key($this->private_key, $name = '');
-    //
-    //   $this->assertEquals('tls_private_key', $response->data['type']);
-    //}
+   public function testUploadPrivateKeys()
+   {
+      $keys = $this->fastly->private_keys;
+      $response = $keys->send_private_key($this->private_key, $name = '');
+
+      $this->assertEquals('tls_private_key', $response->data['type']);
+   }
 
     //public function testDeletePrivateKeys()
     //{
