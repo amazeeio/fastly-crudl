@@ -9,6 +9,7 @@ namespace Fastly;
 
 use Fastly\Exceptions\FastlyAPIResponseException;
 use Fastly\Request\FastlyRequest;
+use Fastly\Types\FastlyBilling;
 use Fastly\Types\FastlyCertificates;
 use Fastly\Types\FastlyDomains;
 use Fastly\Types\FastlyPrivateKeys;
@@ -33,6 +34,7 @@ class Fastly
     public $configurations;
     public $private_keys;
     public $stats;
+    public $billing;
 
     /**
      * Fastly API Client.
@@ -53,6 +55,7 @@ class Fastly
         $this->configurations = new FastlyTLSConfigurations($token, $entryPoint);
         $this->private_keys = new FastlyPrivateKeys($token, $entryPoint);
         $this->stats = new FastlyStats($token, $entryPoint);
+        $this->billing = new FastlyBilling($token, $entryPoint);
     }
 
     /**
