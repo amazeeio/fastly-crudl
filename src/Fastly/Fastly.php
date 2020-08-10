@@ -20,14 +20,13 @@ use GuzzleHttp\Exception\RequestException;
 
 class Fastly
 {
+    const VERSION = '2.1.0';
 
-    const VERSION = '0.1.1';
-
-    private $request;
     private $entryPoint;
     private $service;
     private $error;
 
+    public $request;
     public $certificates;
     public $services;
     public $domains;
@@ -45,10 +44,10 @@ class Fastly
      */
     public function __construct(string $token, $service = '', $entryPoint = 'https://api.fastly.com/')
     {
-        $this->request    = new FastlyRequest($token, $entryPoint);
         $this->service    = $service;
         $this->entryPoint = $entryPoint;
 
+        $this->request = new FastlyRequest($token, $entryPoint);
         $this->certificates = new FastlyCertificates($token, $entryPoint);
         $this->services = new FastlyServices($token, $entryPoint);
         $this->domains = new FastlyDomains($token, $entryPoint);
