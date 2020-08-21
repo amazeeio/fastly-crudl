@@ -34,7 +34,6 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
 
       // Get whole response from API.
       $this->assertArrayHasKey('data', $certificates);
-      $this->assertArrayHasKey('meta', $certificates);
     }
 
     public function testGetPlatformTLSCertificates()

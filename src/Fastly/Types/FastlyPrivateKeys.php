@@ -53,7 +53,12 @@ class FastlyPrivateKeys extends FastlyRequest
      */
     public function get_private_key($id)
     {
-        $result = $this->send('GET', $this->build_endpoint('tls/private_keys/') . $id);
+        try {
+          $result = $this->send('GET', $this->build_endpoint('tls/private_keys/') . $id);
+        } catch (RequestException $e) {
+          $this->error = $e;
+          return $e->getMessage();
+        }
 
         if ($result) {
             return new FastlyPrivateKey($this->build_output($result)['data']);
@@ -72,20 +77,29 @@ class FastlyPrivateKeys extends FastlyRequest
     {
         $filter_encoded_query = http_build_query($filter);
         $endpoint = !empty($filter) ? 'tls/private_keys?'.$filter_encoded_query  : 'tls/private_keys';
-        $keys_response = $this->send('GET', $this->build_endpoint($endpoint));
+
+        try {
+          $keys_response = $this->send('GET', $this->build_endpoint($endpoint));
+        } catch (RequestException $e) {
+          $this->error = $e;
+          return $e->getMessage();
+        }
 
         $keys = [];
 
         if ($keys_response !== null || $keys_response != []) {
-            $output = $this->build_output($keys_response);
-            $this->data = $output['data'];
-            $this->meta = $output['meta'];
+          $output = $this->build_output($keys_response);
+          $this->data = $output['data'];
+          $this->meta = $output['meta'];
 
-            foreach ($this->data as $private_key) {
-                $keys['data'][] = new FastlyPrivateKey($private_key);
-            }
+          foreach ($this->data as $private_key) {
+            $keys['data'][] = new FastlyPrivateKey($private_key);
+          }
 
-            $keys['meta'][] = $this->meta;
+          $keys['meta'][] = $this->meta;
+        }
+        else {
+          return ['data' => "No private keys returned."];
         }
 
         return $keys;

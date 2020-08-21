@@ -21,7 +21,13 @@ class FastlyCertificates extends FastlyRequest
     public function get_tls_certificate($id = '')
     {
         $endpoint = $this->build_endpoint('tls/certificates/' . $id);
-        $certificate_response = $this->send('GET', $endpoint);
+
+        try {
+          $certificate_response = $this->send('GET', $endpoint);
+        } catch (RequestException $e) {
+          $this->error = $e;
+          return $e->getMessage();
+        }
 
         if ($certificate_response !== null || $certificate_response != []) {
             $output = $this->build_output($certificate_response);
@@ -41,10 +47,16 @@ class FastlyCertificates extends FastlyRequest
     {
       $filter_encoded_query = http_build_query($filter);
       $endpoint = !empty($filter) ? 'tls/certificates?'.$filter_encoded_query  : 'tls/certificates';
-      $certificates_response = $this->send('GET', $this->build_endpoint($endpoint));
+
+      try {
+        $certificates_response = $this->send('GET', $this->build_endpoint($endpoint));
+      } catch (RequestException $e) {
+        $this->error = $e;
+        return $e->getMessage();
+      }
 
       $certificates = [];
-      if ($certificates_response !== null || $certificates_response != []) {
+      if (!isEmpty($certificates_response)) {
         $output = $this->build_output($certificates_response);
         $this->data = $output['data'];
         $this->meta = $output['meta'];
@@ -54,6 +66,9 @@ class FastlyCertificates extends FastlyRequest
         }
 
         $certificates['meta'][] = $this->meta;
+      }
+      else {
+        return ['data' => "No certificates returned."];
       }
 
       return $certificates;
@@ -68,13 +83,19 @@ class FastlyCertificates extends FastlyRequest
     public function getTLSBulkCertificate($id = '')
     {
         $endpoint = $this->build_endpoint('tls/bulk/certificates/' . $id);
-        $certificate_response = $this->send('GET', $endpoint);
+
+        try {
+          $certificate_response = $this->send('GET', $endpoint);
+        } catch (RequestException $e) {
+          $this->error = $e;
+          return $e->getMessage();
+        }
 
         if ($certificate_response !== null && $certificate_response != []) {
-            $output = $this->build_output($certificate_response);
-            $this->data = $output['data'];
+          $output = $this->build_output($certificate_response);
+          $this->data = $output['data'];
 
-            return new FastlyBulkCertificate($output['data']);
+          return new FastlyBulkCertificate($output['data']);
         }
     }
 
@@ -87,16 +108,20 @@ class FastlyCertificates extends FastlyRequest
     public function getTLSBulkCertificates($options = '')
     {
         if ($options === '' || $options === null) {
-          $certificates_response = $this->send(
-            'GET',
-            $this->build_endpoint('tls/bulk/certificates')
-          );
+          try {
+            $certificates_response = $this->send('GET', $this->build_endpoint('tls/bulk/certificates'));
+          } catch (RequestException $e) {
+            $this->error = $e;
+            return $e->getMessage();
+          }
         }
         else {
-          $certificates_response = $this->send(
-            'GET',
-            $this->build_endpoint('tls/bulk/certificates?'.$options)
-          );
+          try {
+            $certificates_response = $this->send('GET', $this->build_endpoint('tls/bulk/certificates?'.$options));
+          } catch (RequestException $e) {
+            $this->error = $e;
+            return $e->getMessage();
+          }
         }
 
         $certificates = [];
