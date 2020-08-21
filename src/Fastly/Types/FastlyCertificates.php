@@ -4,7 +4,6 @@ namespace Fastly\Types;
 
 use Fastly\Request\FastlyRequest;
 use GuzzleHttp\Exception\RequestException;
-use function PHPUnit\Framework\isEmpty;
 
 class FastlyCertificates extends FastlyRequest
 {
@@ -56,7 +55,7 @@ class FastlyCertificates extends FastlyRequest
       }
 
       $certificates = [];
-      if (!isEmpty($certificates_response)) {
+      if (!empty($certificates_response)) {
         $output = $this->build_output($certificates_response);
         $this->data = $output['data'];
         $this->meta = $output['meta'];
