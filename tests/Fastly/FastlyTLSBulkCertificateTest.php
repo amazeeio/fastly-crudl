@@ -31,7 +31,6 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
     {
       $certificatesObject = $this->fastly->certificates;
       $certificates = $certificatesObject->get_tls_certificates();
-
       // Get whole response from API.
       $this->assertArrayHasKey('data', $certificates);
     }
@@ -39,9 +38,16 @@ class FastlyTLSBulkCertificateTest extends \PHPUnit\Framework\TestCase
     public function testGetPlatformTLSCertificates()
     {
         $certificatesObject = $this->fastly->certificates;
-        $certificates = $certificatesObject->getTLSBulkCertificates();
-
+        $certificates = $certificatesObject->getTLSBulkCertificates('page[size]=200');
         // Get whole response from API.
+        $this->assertArrayHasKey('data', $certificates);
+        $this->assertArrayHasKey('links', $certificates);
+        $this->assertArrayHasKey('meta', $certificates);
+    }
+
+    public function testGetAllBulkCertificates()
+    {
+        $certificates = $this->fastly->certificates->getAllBulkCertificates();
         $this->assertArrayHasKey('data', $certificates);
         $this->assertArrayHasKey('links', $certificates);
         $this->assertArrayHasKey('meta', $certificates);

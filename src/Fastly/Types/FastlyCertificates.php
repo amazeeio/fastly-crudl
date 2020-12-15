@@ -7,6 +7,10 @@ use GuzzleHttp\Exception\RequestException;
 
 class FastlyCertificates extends FastlyRequest
 {
+
+    const MAX_CERTIFICATES_FROM_ENDPOINT = 200;
+    const MAX_CERTIFICATE_PAGES_TO_PULL = 50; //this will allow up to 10000 certificates
+
     public $data;
     public $links;
     public $meta;
@@ -140,6 +144,38 @@ class FastlyCertificates extends FastlyRequest
         }
 
         return $certificates;
+    }
+
+    public function getAllBulkCertificates()
+    {
+        $lastPage = false;
+        $options = sprintf("page[size]=%d",
+          self::MAX_CERTIFICATES_FROM_ENDPOINT);
+        $pageCount = 0;
+
+        $totalCertificateData = [];
+
+        while (!$lastPage && $pageCount++ < self::MAX_CERTIFICATES_FROM_ENDPOINT) {
+            $certificateData = self::getTLSBulkCertificates($options);
+            $totalCertificateData[] = $certificateData['data'];
+
+            $currentPage = $certificateData['meta'][0]['current_page'];
+            $totalPages = $certificateData['meta'][0]['total_pages'];
+
+            if ($currentPage >= $totalPages) {
+                $lastPage = true;
+            } else {
+                $options = sprintf("page[size]=%d&page[number]=%d",
+                  self::MAX_CERTIFICATES_FROM_ENDPOINT, ++$currentPage);
+            }
+        }
+
+        return [
+          'data' => array_reduce($totalCertificateData, function ($c, $e) { return array_merge($c, $e);}, []),
+          'links' => [],
+          'meta' => [],
+        ];
+
     }
 
     /**
