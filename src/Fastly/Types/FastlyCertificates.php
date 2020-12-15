@@ -162,6 +162,10 @@ class FastlyCertificates extends FastlyRequest
             $currentPage = $certificateData['meta'][0]['current_page'];
             $totalPages = $certificateData['meta'][0]['total_pages'];
 
+            if(!is_numeric($currentPage) || !is_numeric($totalPages)) {
+                throw new \Exception("Call to getAllBulkCertificates resulted in bad results from Fastly API");
+            }
+
             if ($currentPage >= $totalPages) {
                 $lastPage = true;
             } else {
